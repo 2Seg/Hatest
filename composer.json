@@ -1,9 +1,6 @@
 {
     "name": "lv-booster/hatest",
     "description": "Library to units tests",
-    "require": {
-        "phpunit/phpunit": ">=5.7"
-    },
     "autoload": {
         "psr-4": {
             "Hatest\\": "src/"
@@ -15,5 +12,8 @@
             "email": "contact@link-value.fr"
         }
     ],
+    "require": {
+        "phpunit/phpunit": ">=5.7"
+    },
     "minimum-stability": "stable"
 }
