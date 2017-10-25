@@ -50,7 +50,11 @@ trait GetterTrait
     {
         $object = $this->init();
         $this->prepareProperty($object, $property, $value);
-        $getter = 'get' . $this->toCamelCaseGetter($property);
+        if (is_bool($value)) {
+            $getter = 'is' . $this->toCamelCaseGetter($property);
+        } else {
+            $getter = 'get' . $this->toCamelCaseGetter($property);
+        }
         $this->assertSame($value, $object->$getter());
     }
 
