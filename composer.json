@@ -1,5 +1,5 @@
 {
-    "name": "lv-booster/hatest",
+    "name": "holoflins/hatest",
     "description": "Library to units tests",
     "autoload": {
         "psr-4": {
@@ -8,8 +8,8 @@
     },
     "authors": [
         {
-            "name": "Link-Value Booster",
-            "email": "contact@link-value.fr"
+            "name": "Holoflins",
+            "email": "morgan.hulot@gmail.com"
         }
     ],
     "require": {
