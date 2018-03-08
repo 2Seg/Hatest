@@ -7,7 +7,7 @@ trait GetterTrait
     /**
      * Update the property to an object
      *
-     * @param mixed $object
+     * @param mixed  $object
      * @param string $property
      * @param string $value
      */
@@ -51,7 +51,14 @@ trait GetterTrait
         $object = $this->init();
         $this->prepareProperty($object, $property, $value);
         if (is_bool($value)) {
-            $getter = 'is' . $this->toCamelCaseGetter($property);
+            $getter = '';
+            $property = $this->toCamelCaseGetter($property);
+
+            if (!preg_match('#^Is[A-Z]#', $property)) {
+                $getter .= 'is';
+            }
+
+            $getter .= $property;
         } else {
             $getter = 'get' . $this->toCamelCaseGetter($property);
         }
