@@ -33,10 +33,39 @@ trait CollectionTrait
      */
     public function testGetElements($property)
     {
-        $getter = 'get' . $this->toCamelCaseCollection($property) . 's';
+        $getter = 'get' . $this->toPlural($this->toCamelCaseCollection($property));
         $object = $this->init();
 
         $this->assertTrue($object->$getter() instanceof Collection);
+    }
+
+    /**
+     * @param $word
+     *
+     * @return string
+     */
+    private function toPlural($word)
+    {
+        $character = $word[strlen($word) - 1];
+        $previous = $word[strlen($word) - 2];
+
+        if ($character === 'y' && !in_array($previous, ['a', 'e', 'i', 'o', 'u', 'y'])) {
+            return substr($word, 0, -1) . 'ies';
+        }
+
+        if ($character === 'f') {
+            return substr($word, 0, -1) . 'ves';
+        }
+
+        if (($character === 'e' && $previous === 'f')) {
+            return substr($word, 0, -2) . 'ves';
+        }
+
+        if ($character === 'x' ||$character === 's' || $character === 'o' || ($character === 'h' && in_array($previous, ['c', 's']))) {
+            return $word . 'es';
+        }
+
+        return $word . 's';
     }
 
     /**
