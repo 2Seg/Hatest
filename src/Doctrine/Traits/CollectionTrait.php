@@ -30,10 +30,12 @@ trait CollectionTrait
      * @dataProvider providerCollection
      *
      * @param $property
+     * @param $element
+     * @param array $options
      */
-    public function testGetElements($property)
+    public function testGetElements($property, $element, array $options = [])
     {
-        $getter = 'get' . $this->toPlural($this->toCamelCaseCollection($property));
+        $getter = $this->getFunctionName('get', $this->toPlural($this->toCamelCaseCollection($property)), $options);
         $object = $this->init();
 
         $this->assertTrue($object->$getter() instanceof Collection);
@@ -73,12 +75,13 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testAddElement($property, $element)
+    public function testAddElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
         $object->$setter($element);
@@ -91,12 +94,13 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testHasElement($property, $element)
+    public function testHasElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
 
@@ -109,18 +113,59 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testRemoveElement($property, $element)
+    public function testRemoveElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $remove = 'remove' . $propertyName;
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+
+        $remove = $this->getFunctionName('remove', $propertyName, $options);
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
 
         $this->assertInstanceOf(get_class($object), $object->$setter($element));
         $this->assertInstanceOf(get_class($object), $object->$remove($element));
         $this->assertFalse($object->$has($element));
+    }
+
+    /**
+     * @param string $operation
+     * @param string $propertyName
+     * @param array $options
+     *
+     * @return string
+     */
+    private function getFunctionName($operation, $propertyName, array $options = [])
+    {
+        switch ($operation) {
+            case 'get':
+                if (key_exists('getter', $options)) {
+                    return $options['getter'];
+                } else {
+                    return 'get' . $propertyName;
+                }
+            case 'add':
+                if (key_exists('adder', $options)) {
+                    return $options['adder'];
+                } else {
+                    return 'add' . $propertyName;
+                }
+            case 'remove':
+                if (key_exists('remover', $options)) {
+                    return $options['remover'];
+                } else {
+                    return 'remove' . $propertyName;
+                }
+            case 'has':
+                if (key_exists('haser', $options)) {
+                    return $options['haser'];
+                } else {
+                    return 'has' . $propertyName;
+                }
+        }
+
+        return '';
     }
 }

@@ -9,10 +9,15 @@ trait SetterTrait
      *
      * @param $property
      * @param $value
+     * @param array $options
      */
-    public function testSetter($property, $value)
+    public function testSetter($property, $value, array $options = [])
     {
-        $setter = 'set' . $this->toCamelCaseSetter($property);
+        if (key_exists('setter', $options)) {
+            $setter = $options['setter'];
+        } else {
+            $setter = 'set' . $this->toCamelCaseSetter($property);
+        }
         $object = $this->init();
         $object->$setter($value);
         $this->assertAttributeSame($value, $property, $object);

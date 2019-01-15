@@ -7,9 +7,11 @@ trait GetterTrait
     /**
      * Update the property to an object
      *
-     * @param mixed  $object
+     * @param mixed $object
      * @param string $property
      * @param string $value
+     *
+     * @throws \ReflectionException
      */
     public function prepareProperty($object, $property, $value)
     {
@@ -45,12 +47,17 @@ trait GetterTrait
      *
      * @param string $property
      * @param string $value
+     * @param array $options
+     *
+     * @throws \ReflectionException
      */
-    public function testGetter($property, $value)
+    public function testGetter($property, $value, array $options = [])
     {
         $object = $this->init();
         $this->prepareProperty($object, $property, $value);
-        if (is_bool($value)) {
+        if (key_exists('getter', $options)) {
+            $getter = $options['getter'];
+        } elseif (is_bool($value)) {
             $getter = '';
             $property = $this->toCamelCaseGetter($property);
 
@@ -67,6 +74,8 @@ trait GetterTrait
 
     /**
      * test getId
+     *
+     * @throws \ReflectionException
      */
     public function testGetId()
     {
