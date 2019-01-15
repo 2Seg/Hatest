@@ -4,6 +4,8 @@ namespace Hatest\Traits;
 
 trait GetterTrait
 {
+    use NameableTrait;
+
     /**
      * Update the property to an object
      *
@@ -55,9 +57,7 @@ trait GetterTrait
     {
         $object = $this->init();
         $this->prepareProperty($object, $property, $value);
-        if (key_exists('getter', $options)) {
-            $getter = $options['getter'];
-        } elseif (is_bool($value)) {
+        if (is_bool($value)) {
             $getter = '';
             $property = $this->toCamelCaseGetter($property);
 
@@ -67,7 +67,7 @@ trait GetterTrait
 
             $getter .= $property;
         } else {
-            $getter = 'get' . $this->toCamelCaseGetter($property);
+            $getter = $this->getFunctionName('get', $this->toCamelCaseGetter($property), $options);
         }
         $this->assertSame($value, $object->$getter());
     }

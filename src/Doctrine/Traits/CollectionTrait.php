@@ -3,9 +3,12 @@
 namespace Hatest\Doctrine\Traits;
 
 use Doctrine\Common\Collections\Collection;
+use Hatest\Traits\NameableTrait;
 
 trait CollectionTrait
 {
+    use NameableTrait;
+
     /**
      * Change property to camel case for methods
      *
@@ -128,44 +131,5 @@ trait CollectionTrait
         $this->assertInstanceOf(get_class($object), $object->$setter($element));
         $this->assertInstanceOf(get_class($object), $object->$remove($element));
         $this->assertFalse($object->$has($element));
-    }
-
-    /**
-     * @param string $operation
-     * @param string $propertyName
-     * @param array $options
-     *
-     * @return string
-     */
-    private function getFunctionName($operation, $propertyName, array $options = [])
-    {
-        switch ($operation) {
-            case 'get':
-                if (key_exists('getter', $options)) {
-                    return $options['getter'];
-                } else {
-                    return 'get' . $propertyName;
-                }
-            case 'add':
-                if (key_exists('adder', $options)) {
-                    return $options['adder'];
-                } else {
-                    return 'add' . $propertyName;
-                }
-            case 'remove':
-                if (key_exists('remover', $options)) {
-                    return $options['remover'];
-                } else {
-                    return 'remove' . $propertyName;
-                }
-            case 'has':
-                if (key_exists('haser', $options)) {
-                    return $options['haser'];
-                } else {
-                    return 'has' . $propertyName;
-                }
-        }
-
-        return '';
     }
 }
