@@ -4,15 +4,18 @@ namespace Hatest\Traits;
 
 trait SetterTrait
 {
+    use NameableTrait;
+
     /**
      * @dataProvider providerGetterAndSetter
      *
      * @param $property
      * @param $value
+     * @param array $options
      */
-    public function testSetter($property, $value)
+    public function testSetter($property, $value, array $options = [])
     {
-        $setter = 'set' . $this->toCamelCaseSetter($property);
+        $setter = $this->getFunctionName('set', $this->toCamelCaseSetter($property), $options);
         $object = $this->init();
         $object->$setter($value);
         $this->assertAttributeSame($value, $property, $object);

@@ -3,9 +3,12 @@
 namespace Hatest\Doctrine\Traits;
 
 use Doctrine\Common\Collections\Collection;
+use Hatest\Traits\NameableTrait;
 
 trait CollectionTrait
 {
+    use NameableTrait;
+
     /**
      * Change property to camel case for methods
      *
@@ -30,10 +33,12 @@ trait CollectionTrait
      * @dataProvider providerCollection
      *
      * @param $property
+     * @param $element
+     * @param array $options
      */
-    public function testGetElements($property)
+    public function testGetElements($property, $element, array $options = [])
     {
-        $getter = 'get' . $this->toPlural($this->toCamelCaseCollection($property));
+        $getter = $this->getFunctionName('get', $this->toPlural($this->toCamelCaseCollection($property)), $options);
         $object = $this->init();
 
         $this->assertTrue($object->$getter() instanceof Collection);
@@ -73,12 +78,13 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testAddElement($property, $element)
+    public function testAddElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
         $object->$setter($element);
@@ -91,12 +97,13 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testHasElement($property, $element)
+    public function testHasElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
 
@@ -109,13 +116,15 @@ trait CollectionTrait
      *
      * @param $property
      * @param $element
+     * @param array $options
      */
-    public function testRemoveElement($property, $element)
+    public function testRemoveElement($property, $element, array $options = [])
     {
         $propertyName = $this->toCamelCaseCollection($property);
-        $remove = 'remove' . $propertyName;
-        $has = 'has' . $propertyName;
-        $setter = 'add' . $propertyName;
+
+        $remove = $this->getFunctionName('remove', $propertyName, $options);
+        $has = $this->getFunctionName('has', $propertyName, $options);
+        $setter = $this->getFunctionName('add', $propertyName, $options);
 
         $object = $this->init();
 

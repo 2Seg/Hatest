@@ -4,12 +4,16 @@ namespace Hatest\Traits;
 
 trait GetterTrait
 {
+    use NameableTrait;
+
     /**
      * Update the property to an object
      *
-     * @param mixed  $object
+     * @param mixed $object
      * @param string $property
      * @param string $value
+     *
+     * @throws \ReflectionException
      */
     public function prepareProperty($object, $property, $value)
     {
@@ -45,8 +49,11 @@ trait GetterTrait
      *
      * @param string $property
      * @param string $value
+     * @param array $options
+     *
+     * @throws \ReflectionException
      */
-    public function testGetter($property, $value)
+    public function testGetter($property, $value, array $options = [])
     {
         $object = $this->init();
         $this->prepareProperty($object, $property, $value);
@@ -60,13 +67,15 @@ trait GetterTrait
 
             $getter .= $property;
         } else {
-            $getter = 'get' . $this->toCamelCaseGetter($property);
+            $getter = $this->getFunctionName('get', $this->toCamelCaseGetter($property), $options);
         }
         $this->assertSame($value, $object->$getter());
     }
 
     /**
      * test getId
+     *
+     * @throws \ReflectionException
      */
     public function testGetId()
     {
