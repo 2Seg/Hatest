@@ -16,7 +16,12 @@ trait SetterTrait
         $setter = $this->getFunctionName('set', $this->toCamelCaseSetter($property), $options);
         $object = $this->init();
         $object->$setter($value);
-        $this->assertAttributeSame($value, $property, $object);
+	$reflection = new \ReflectionClass($object);
+        $property = $reflection->getProperty($property);
+        $property->setAccessible(true);
+        $newValue = $property->getValue($object);
+
+        $this->assertSame($value, $newValue);
     }
 
     /**
